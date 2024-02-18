@@ -1,0 +1,133 @@
+substitutions:
+  node_name: curtain_v1
+  device_verbose_name: "Curtains"
+  log_level: DEBUG
+
+packages:
+  wifi: !include common/wifi.yaml
+  device_base: !include common/device_base.yaml
+  relay_1: !include
+    file: easylink/4ch_relay.yaml
+    vars:
+      id_prefix: module_1
+      switch_1: 5
+      switch_2: 19
+      switch_3: 18
+      switch_4: 23
+  relay_2: !include
+    file: easylink/4ch_relay.yaml
+    vars:
+      id_prefix: module_2
+      switch_1: 17
+      switch_2: 16
+      switch_3: 4
+      switch_4: 15
+  termina_block_1: !include { file: easylink/termina_block.yaml, vars: { id: 1, pin: 32 } }
+  termina_block_2: !include { file: easylink/termina_block.yaml, vars: { id: 2, pin: 33 } }
+  termina_block_3: !include { file: easylink/termina_block.yaml, vars: { id: 3, pin: 25 } }
+  termina_block_4: !include { file: easylink/termina_block.yaml, vars: { id: 4, pin: 26 } }
+  termina_block_5: !include { file: easylink/termina_block.yaml, vars: { id: 5, pin: 27 } }
+  termina_block_6: !include { file: easylink/termina_block.yaml, vars: { id: 6, pin: 14 } }
+  termina_block_7: !include { file: easylink/termina_block.yaml, vars: { id: 7, pin: 12 } }
+  termina_block_8: !include { file: easylink/termina_block.yaml, vars: { id: 8, pin: 13 } }
+
+# wifi:
+#   use_address: 192.168.1.55
+
+
+cover:
+  - platform: time_based
+    name: "Salon"
+    id: cover_1
+    manual_control: true
+    assumed_state: false
+    open_action:
+      - switch.turn_off: module_1_switch_1
+      - switch.turn_on: module_1_switch_2
+    open_duration: 15s
+
+    close_action:
+      - switch.turn_off: module_1_switch_2
+      - switch.turn_on: module_1_switch_1
+    close_duration: 15s
+
+    stop_action:
+      - switch.turn_off: module_1_switch_1
+      - switch.turn_off: module_1_switch_2
+
+  - platform: time_based
+    name: "Jadalnia"
+    id: cover_2
+    manual_control: true
+    assumed_state: false
+    open_action:
+      - switch.turn_off: module_1_switch_3
+      - switch.turn_on: module_1_switch_4
+    open_duration: 22s
+
+    close_action:
+      - switch.turn_off: module_1_switch_4
+      - switch.turn_on: module_1_switch_3
+    close_duration: 22s
+
+    stop_action:
+      - switch.turn_off: module_1_switch_3
+      - switch.turn_off: module_1_switch_4
+
+  - platform: time_based
+    name: "Kuchnia"
+    id: cover_3
+    manual_control: true
+    assumed_state: false
+    open_action:
+      - switch.turn_off: module_2_switch_2
+      - switch.turn_on: module_2_switch_1
+    open_duration: 10s
+
+    close_action:
+      - switch.turn_off: module_2_switch_1
+      - switch.turn_on: module_2_switch_2
+    close_duration: 10s
+
+    stop_action:
+      - switch.turn_off: module_2_switch_1
+      - switch.turn_off: module_2_switch_2
+
+  - platform: time_based
+    name: "Sypialnia"
+    id: cover_4
+
+    open_action:
+      - switch.turn_off: module_2_switch_4
+      - switch.turn_on: module_2_switch_3
+    open_duration: 10s
+    manual_control: true
+    assumed_state: false
+    close_action:
+      - switch.turn_off: module_2_switch_3
+      - switch.turn_on: module_2_switch_4
+    close_duration: 10s
+
+    stop_action:
+      - switch.turn_off: module_2_switch_3
+      - switch.turn_off: module_2_switch_4
+
+
+
+binary_sensor:
+- id: !extend button_1
+  on_multi_click: !include { file: helper/cover_close.yaml, vars: { id: cover_1, button: button_1 } }
+- id: !extend button_2
+  on_multi_click: !include { file: helper/cover_open.yaml, vars: { id: cover_1, button: button_2 } }
+- id: !extend button_3
+  on_multi_click: !include { file: helper/cover_close.yaml, vars: { id: cover_2, button: button_3 } }
+- id: !extend button_4
+  on_multi_click: !include { file: helper/cover_open.yaml, vars: { id: cover_2, button: button_4 } }
+- id: !extend button_5
+  on_multi_click: !include { file: helper/cover_close.yaml, vars: { id: cover_3, button: button_5 } }
+- id: !extend button_6
+  on_multi_click: !include { file: helper/cover_open.yaml, vars: { id: cover_3, button: button_6 } }
+- id: !extend button_7
+  on_press: 
+    then:
+      - cover.toggle: cover_4

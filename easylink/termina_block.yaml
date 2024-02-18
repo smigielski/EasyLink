@@ -1,0 +1,9 @@
+binary_sensor:
+  - platform: gpio
+    pin: 
+      number: ${pin}
+      inverted: true
+      mode:
+        input: true
+        pullup: true  
+    id: button_${id}

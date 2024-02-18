@@ -1,0 +1,13 @@
+switch:
+  - platform: gpio
+    pin: ${switch_1}
+    id: ${id_prefix}_switch_1
+  - platform: gpio
+    pin: ${switch_2}
+    id: ${id_prefix}_switch_2
+  - platform: gpio
+    pin: ${switch_3}
+    id: ${id_prefix}_switch_3
+  - platform: gpio
+    pin: ${switch_4}
+    id: ${id_prefix}_switch_4

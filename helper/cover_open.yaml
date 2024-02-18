@@ -1,0 +1,21 @@
+- timing:
+    - ON for at most 0.5s
+    - OFF for at least 0.2s
+  then:
+    - logger.log: "Clicked"
+    - if:
+        condition:
+          lambda: 'return id(${id}).current_operation == CoverOperation::COVER_OPERATION_OPENING;'
+        then:
+          - cover.stop: ${id}
+        else:
+          - cover.open: ${id}
+- timing:
+    - ON for at least 0.5s
+  then:
+    - logger.log: "Long Press"
+    - cover.open: ${id}
+    - wait_until:
+        binary_sensor.is_off: ${button}
+    - logger.log: "Stop"
+    - cover.stop: ${id}
